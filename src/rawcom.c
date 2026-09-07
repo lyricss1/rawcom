@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
         if(strcmp(argv[i],"-p")==0 && i+1<argc){
             strcpy(port, argv[i+1]);
             i++;
-        }else if(strcmp(argv[i],"-s")==0 && i+1<argc){
+        }else if((strcmp(argv[i],"-s")== 0 || strcmp(argv[i],"-b")==0) && i+1<argc){
             baud = atoi(argv[i+1]);
             i++;
         }
