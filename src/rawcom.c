@@ -68,12 +68,20 @@ int main(int argc, char* argv[]) {
     DWORD bytesRead = 0;
     while(1){
         BOOL res = ReadFile(h, buffer, sizeof(buffer) - 1, &bytesRead, NULL);
-        if(res && bytesRead > 0){
-            buffer[bytesRead] = '\0';
-            printf("%s", buffer);
-            fflush(stdout);
+        if(res){
+            if(bytesRead > 0){
+                buffer[bytesRead] = '\0';
+                printf("%s", buffer);
+                fflush(stdout);
+            }
+        }else{
+            DWORD err = GetLastError();
+            if(err == ERROR_DEVICE_NOT_CONNECTED || err == ERROR_OPERATION_ABORTED || err == ERROR_GEN_FAILURE){
+                printf("\nDevice disconnected\n");
+                break;
+            }
         }
-        Sleep(10);
+        Sleep(1);
     }
     CloseHandle(h);
     return 0;
