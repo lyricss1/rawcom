@@ -1,12 +1,13 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
-SRC = src/rawcom.c
-TARGET = rawcom.exe
+CFLAGS = -Wall -I.
+
+TARGET = rawcom
+SRCS = rawcom.c src/serial.c
 
 all: $(TARGET)
 
-$(TARGET):$(SRC)
-	$(CC)$(CFLAGS) $(SRC) -o$(TARGET)
+$(TARGET): $(SRCS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS)
 
 clean:
-	del /f /q $(TARGET) 2>nul \vert{}\vert{} rm -f$(TARGET)
+	rm -f $(TARGET) $(TARGET).exe
