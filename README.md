@@ -15,8 +15,9 @@ Small cross-platform CLI utility to read raw data from serial ports on Linux and
 
 ### Linux
 
+```
 make
-
+```
 Or manually:
 
 gcc -Wall -I. -o rawcom rawcom.c src/serial.c
@@ -34,9 +35,9 @@ gcc -Wall -I. -o rawcom.exe rawcom.c src/serial.c
 rawcom <port> [baud] [-pins]
 rawcom --show
 
-* <port> — Serial port name (COM3 on Windows, /dev/ttyUSB0 on Linux).
-* [baud] — Baud rate (default: 9600). Common values: 9600, 19200, 38400, 57600, 115200.
-* [-pins] — Optional flag to print modem pin states before listening.
+* <port> - Serial port name (COM3 on Windows, /dev/ttyUSB0 on Linux).
+* [baud] - Baud rate (default: 9600). Common values: 9600, 19200, 38400, 57600, 115200.
+* [-pins] - Optional flag to print modem pin states before listening.
 
 ### Examples
 
