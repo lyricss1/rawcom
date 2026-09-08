@@ -84,12 +84,29 @@ void check_pins(port_t fd) {
            (s & MS_RLSD_ON) ? "1" : "0");
 }
 
+void show_ports() {
+    char b[32];
+    for (int i = 1; i < 100; i++) {
+        sprintf(b, "\\\\.\\COM%d", i);
+        HANDLE h = CreateFileA(b, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+        if (h != INVALID_HANDLE_VALUE) {
+            printf("COM%d\n", i);
+            CloseHandle(h);
+        } else {
+            if (GetLastError() == 5) { 
+                printf("COM%d (busy)\n", i);
+            }
+        }
+    }
+}
+
 #else
 
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
 #include <sys/ioctl.h>
+#include <dirent.h>
 
 port_t my_open_port(char *name) {
     int fd = open(name, O_RDWR | O_NOCTTY | O_NDELAY);
@@ -113,7 +130,7 @@ int set_baud(port_t fd, int speed) {
     else if (speed == 57600) sp = B57600;
     else if (speed == 115200) sp = B115200;
     else {
-        printf("unknown speed,now using 9600\n");
+        printf("unknown speed, using 9600\n");
         sp = B9600;
     }
 
@@ -164,6 +181,20 @@ void check_pins(port_t fd) {
            (status & TIOCM_DSR) ? "1" : "0",
            (status & TIOCM_RNG) ? "1" : "0",
            (status & TIOCM_CD) ? "1" : "0");
+}
+
+void show_ports() {
+    DIR *d;
+    struct dirent *dir;
+    d = opendir("/dev");
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            if (strstr(dir->d_name, "ttyUSB") || strstr(dir->d_name, "ttyACM") || strstr(dir->d_name, "ttyS0")) {
+                printf("/dev/%s\n", dir->d_name);
+            }
+        }
+        closedir(d);
+    }
 }
 
 #endif

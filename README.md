@@ -1,62 +1,61 @@
 # rawcom
 
-Small cross-platform CLI utility to read raw data from serial ports on Linux and Windows
+Minimal CLI tool for Windows to monitor raw serial (COM) port data and modem control lines
 
 ## Features
 
-* No heavy dependencies (pure POSIX / Win32 API)
-* Supports Linux (/dev/ttyUSB*, /dev/ttyACM*, /dev/ttyS*) and Windows (COM*)
-* Custom baud rate configuration.
-* Optional modem line inspection (CTS, DSR, RING, RLSD/DCD).
-* Dumps incoming serial stream directly to stdout.
+- Zero third-party dependencies (pure Win32 API).
+- Custom port selection and baud rate configuration via CLI flags.
+- Reports initial modem control pin states (`CTS`, `DSR`, `DCD`).
+- Flushes raw bytes directly to `stdout`.
 
 ## Build
 
-### Linux
+Using MinGW / GCC:
 
+```bash
 make
+```
 
-Or manually:
+Or manual compilation:
 
-gcc -Wall -I. -o rawcom rawcom.c src/serial.c
-
-### Windows (MinGW / GCC)
-
-make
-
-Or manually:
-
-gcc -Wall -I. -o rawcom.exe rawcom.c src/serial.c
+```bash
+gcc -O2 src/rawcom.c -o rawcom.exe
+```
 
 ## Usage
 
-rawcom <port> [baud] [-pins]
-
-* <port> — Serial port name (COM3 on Windows, /dev/ttyUSB0 on Linux).
-* [baud] — Baud rate (default: 9600). Common values: 9600, 19200, 38400, 57600, 115200.
-* [-pins] — Optional flag to print modem pin states before listening.
+```text
+rawcom.exe -p <PORT> -s <BAUDRATE>
+```
 
 ### Examples
 
-Linux:
+Listen on `COM1` at default 9600 baud:
 
-./rawcom /dev/ttyUSB0 115200 -pins
-./rawcom /dev/ttyACM0
+```cmd
+rawcom.exe -p COM1 -s 9600
+```
 
-Windows:
+Listen on `COM3` at 115200 baud:
 
-rawcom.exe COM3 115200 -pins
-rawcom.exe COM1 9600
+```cmd
+rawcom.exe -p COM3 -s 115200
+```
 
-## Output Example
+## Output
 
-opening port /dev/ttyUSB0 at 115200...
-pins status:
-CTS: 0 | DSR: 0 | RING: 0 | DCD: 0
-listening (ctrl+c to stop)...
-[Serial output stream]
+```text
+Port: COM1
+Speed: 9600
+CTS: 1
+DSR: 0
+DCD: 0
+---
+<raw incoming stream>
+```
 
-Press Ctrl+C to exit.
+Press `Ctrl+C` to terminate the session.
 
 ## License
 

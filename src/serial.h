@@ -16,5 +16,6 @@ int my_read_data(port_t fd, char *buf, int len);
 int my_send_data(port_t fd, char *buf, int len);
 void my_close_port(port_t fd);
 void check_pins(port_t fd);
+void show_ports();
 
 #endif
